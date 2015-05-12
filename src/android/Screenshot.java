@@ -57,30 +57,10 @@ public class Screenshot extends CordovaPlugin {
 	
 	private Bitmap getBitmap() {
 		Bitmap bitmap = null;
-		
-		boolean isCrosswalk = false;
-		try {
-			Class.forName("org.crosswalk.engine.XWalkWebViewEngine");
-			isCrosswalk = true;
-		} catch (Exception e) {
-		}
-		
-		if(isCrosswalk) {
-			try {
-				
-				TextureView textureView = findXWalkTextureView((ViewGroup)webView.getView());
-				bitmap = textureView.getBitmap();
-
-			} catch(Exception e) {
-			}
-		} else {
-
-			View view = cordova.getActivity().getWindow().getDecorView().getRootView();
-			view.setDrawingCacheEnabled(true);
-			bitmap = Bitmap.createBitmap(view.getDrawingCache());
-			view.setDrawingCacheEnabled(false);
-
-		}
+        View view = cordova.getActivity().getWindow().getDecorView().getRootView();
+        view.setDrawingCacheEnabled(true);
+        bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
 		
 		return bitmap;
 	}
