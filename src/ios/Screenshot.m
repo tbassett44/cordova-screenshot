@@ -29,7 +29,7 @@ CGFloat statusBarHeight()
     UIGraphicsBeginImageContextWithOptions(rect.size, YES, 0);
     [keyWindow drawViewHierarchyInRect:keyWindow.bounds afterScreenUpdates:NO];
     UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
-    CGRect smallRect = CGRectMake([crop[@"top"] floatValue]*img.scale,[crop[@"left"] floatValue]*img.scale,[crop[@"width"] floatValue]*img.scale,[crop[@"height"] floatValue]*img.scale);
+    CGRect smallRect = CGRectMake([crop[@"left"] floatValue]*img.scale,[crop[@"top"] floatValue]*img.scale,[crop[@"width"] floatValue]*img.scale,[crop[@"height"] floatValue]*img.scale);
     CGImageRef subImageRef = CGImageCreateWithImageInRect(img.CGImage, smallRect);
     UIGraphicsEndImageContext();
     CGRect smallBounds = CGRectMake(0,0,CGImageGetWidth(subImageRef), CGImageGetHeight(subImageRef));
