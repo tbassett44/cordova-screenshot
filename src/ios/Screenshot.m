@@ -16,63 +16,82 @@
 
 @synthesize webView;
 
-//- (void)saveScreenshot:(NSArray*)arguments withDict:(NSDictionary*)options
-
- - (void)saveScreenshot:(CDVInvokedUrlCommand*)command
+CGFloat statusBarHeight()
 {
-	NSString *filename = [command.arguments objectAtIndex:2];
-	NSNumber *quality = [command.arguments objectAtIndex:1];
-	NSString *path = [NSString stringWithFormat:@"%@.jpg",filename];
-
-	NSString *jpgPath = [NSTemporaryDirectory() stringByAppendingPathComponent:path ];
-
-	CGRect imageRect;
-	CGRect screenRect = [[UIScreen mainScreen] bounds];
-
-	// statusBarOrientation is more reliable than UIDevice.orientation
-	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-
-	if (orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight) {
-		// landscape check
-		imageRect = CGRectMake(0, 0, CGRectGetHeight(screenRect), CGRectGetWidth(screenRect));
-	} else {
-		// portrait check
-		imageRect = CGRectMake(0, 0, CGRectGetWidth(screenRect), CGRectGetHeight(screenRect));
-	}
-
-	// Adds support for Retina Display. Code reverts back to original if iOs 4 not detected.
-	if (NULL != UIGraphicsBeginImageContextWithOptions)
-		UIGraphicsBeginImageContextWithOptions(imageRect.size, NO, 0);
-	else
-		UIGraphicsBeginImageContext(imageRect.size);
-
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	[[UIColor blackColor] set];
-	CGContextTranslateCTM(ctx, 0, 0);
-	CGContextFillRect(ctx, imageRect);
-
-    if ([webView respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
-        [webView drawViewHierarchyInRect:webView.bounds afterScreenUpdates:YES];
-    } else {
-        [webView.layer renderInContext:ctx];
-    }
-
-	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-	NSData *imageData = UIImageJPEGRepresentation(image,[quality floatValue]);
-	[imageData writeToFile:jpgPath atomically:NO];
-
-	UIGraphicsEndImageContext();
-
-	CDVPluginResult* pluginResult = nil;
-	NSDictionary *jsonObj = [ [NSDictionary alloc]
-		initWithObjectsAndKeys :
-		jpgPath, @"filePath",
-		@"true", @"success",
-		nil
-		];
-
-	pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
-	[self writeJavascript:[pluginResult toSuccessCallbackString:command.callbackId]];
+    CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+    return MIN(statusBarSize.width, statusBarSize.height);
 }
 
+- (UIImage *)getScreenshot:(NSDictionary*)crop
+{
+    UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
+    CGRect rect = [keyWindow bounds];
+    UIGraphicsBeginImageContextWithOptions(rect.size, YES, 0);
+    [keyWindow drawViewHierarchyInRect:keyWindow.bounds afterScreenUpdates:NO];
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    CGRect smallRect = CGRectMake([crop[@"top"] floatValue]*img.scale,[crop[@"left"] floatValue]*img.scale,[crop[@"width"] floatValue]*img.scale,[crop[@"height"] floatValue]*img.scale);
+    CGImageRef subImageRef = CGImageCreateWithImageInRect(img.CGImage, smallRect);
+    UIGraphicsEndImageContext();
+    CGRect smallBounds = CGRectMake(0,0,CGImageGetWidth(subImageRef), CGImageGetHeight(subImageRef));
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextDrawImage(context,smallBounds,subImageRef);
+    UIImage* cropped = [UIImage imageWithCGImage:subImageRef];
+    UIGraphicsBeginImageContext(smallBounds.size);
+    return cropped;
+//    // cut the status bar from the screenshot
+//    CGRect smallRect = CGRectMake (0,statusBarHeight()*img.scale,rect.size.width*img.scale,rect.size.height*img.scale);
+//
+//    CGImageRef subImageRef = CGImageCreateWithImageInRect(img.CGImage, smallRect);
+//    CGRect smallBounds = CGRectMake(0,0,CGImageGetWidth(subImageRef), CGImageGetHeight(subImageRef));
+//
+//    UIGraphicsBeginImageContext(smallBounds.size);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextDrawImage(context,smallBounds,subImageRef);
+//    UIImage* cropped = [UIImage imageWithCGImage:subImageRef];
+//    UIGraphicsEndImageContext();
+//
+//    CGImageRelease(subImageRef);
+
+    //return cropped;
+}
+
+- (void)saveScreenshot:(CDVInvokedUrlCommand*)command
+{
+    NSString *filename = [command.arguments objectAtIndex:2];
+    NSNumber *quality = [command.arguments objectAtIndex:1];
+    NSDictionary *crop = [command.arguments objectAtIndex:3];
+    //NSDictionary *crop = @{@"top" : @50.0, @"left" : @50.0 , @"width":@100.0, @"height":@100.0};
+    NSString *path = [NSString stringWithFormat:@"%@.jpg",filename];
+    NSString *jpgPath = [NSTemporaryDirectory() stringByAppendingPathComponent:path];
+
+    UIImage *image = [self getScreenshot:crop];
+    NSData *imageData = UIImageJPEGRepresentation(image,[quality floatValue]);
+    [imageData writeToFile:jpgPath atomically:NO];
+
+    CDVPluginResult* pluginResult = nil;
+    NSDictionary *jsonObj = [ [NSDictionary alloc]
+        initWithObjectsAndKeys :
+        jpgPath, @"filePath",
+        @"true", @"success",
+        nil
+    ];
+
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
+    NSString* callbackId = command.callbackId;
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
+}
+
+- (void) getScreenshotAsURI:(CDVInvokedUrlCommand*)command
+{
+    NSNumber *quality = command.arguments[0];
+    NSDictionary *crop = command.arguments[1];
+    UIImage *image = [self getScreenshot:crop];
+    NSData *imageData = UIImageJPEGRepresentation(image,[quality floatValue]);
+    NSString *base64Encoded = [imageData base64EncodedStringWithOptions:0];
+    NSDictionary *jsonObj = @{
+        @"URI" : [NSString stringWithFormat:@"data:image/jpeg;base64,%@", base64Encoded]
+    };
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:jsonObj];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:[command callbackId]];
+}
 @end

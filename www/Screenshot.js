@@ -8,7 +8,15 @@
  */
 var exec = require('cordova/exec'), formats = ['png','jpg'];
 module.exports = {
-	save:function(callback,format,quality, filename) {
+	save:function(callback,format,quality,filename,crop) {
+        if(!crop){
+            var crop={
+	            top:0,
+	            left:0,
+	            width:document.body.clientWidth,
+	            height:document.body.clientHeight
+            }
+        }
 		format = (format || 'png').toLowerCase();
 		filename = filename || 'screenshot_'+Math.round((+(new Date()) + Math.random()));
 		if(formats.indexOf(format) === -1){
@@ -19,16 +27,34 @@ module.exports = {
 			callback && callback(null,res);
 		}, function(error){
 			callback && callback(error);
-		}, "Screenshot", "saveScreenshot", [format, quality, filename]);
+		}, "Screenshot", "saveScreenshot", [format, quality, filename,crop]);
 	},
 
-	URI:function(callback, quality){
+	URI:function(callback, quality,crop){
 		quality = typeof(quality) !== 'number'?100:quality;
+        if(!crop){
+           var crop={
+	           top:0,
+	           left:0,
+	           width:document.body.clientWidth,
+	           height:document.body.clientHeight
+           }
+       }
 		exec(function(res){
 			callback && callback(null, res);
 		}, function(error){
 			callback && callback(error);
-		}, "Screenshot", "getScreenshotAsURI", [quality]);
+		}, "Screenshot", "getScreenshotAsURI", [quality,crop]);
 
+	},
+
+	URISync:function(callback,quality){
+		var method = navigator.userAgent.indexOf("Android") > -1 ? "getScreenshotAsURISync" : "getScreenshotAsURI";
+		quality = typeof(quality) !== 'number'?100:quality;
+		exec(function(res){
+			callback && callback(null,res);
+		}, function(error){
+			callback && callback(error);
+		}, "Screenshot", method, [quality]);
 	}
 };

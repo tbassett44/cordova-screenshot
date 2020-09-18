@@ -16,5 +16,6 @@
 
 //- (void)saveScreenshot:(NSArray*)arguments withDict:(NSDictionary*)options;
 - (void)saveScreenshot:(CDVInvokedUrlCommand*)command;
-
+- (UIImage *)getScreenshot:(NSDictionary*)arguments;
+- (void)getScreenshotAsURI:(CDVInvokedUrlCommand*)command;
 @end
