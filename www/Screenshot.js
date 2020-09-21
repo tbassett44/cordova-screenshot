@@ -18,6 +18,7 @@ module.exports = {
             }
         }
         crop.actual_width=document.body.clientWidth;//used for DPR calc in android
+        crop.actual_height=document.body.clientHeight;//used for DPR calc in android
 		format = (format || 'png').toLowerCase();
 		filename = filename || 'screenshot_'+Math.round((+(new Date()) + Math.random()));
 		if(formats.indexOf(format) === -1){
