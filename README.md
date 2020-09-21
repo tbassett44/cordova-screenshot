@@ -35,7 +35,7 @@ navigator.screenshot.save(function(error,res){
   }else{
     console.log('ok',res.filePath);
   }
-  },'jpg',50,{top:0,left:0,width:200,height:200});
+  },'jpg',50,false,{top:0,left:0,width:200,height:200});
 ```
 
 define a filename

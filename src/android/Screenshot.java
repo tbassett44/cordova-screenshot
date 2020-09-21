@@ -84,6 +84,7 @@ public class Screenshot extends CordovaPlugin {
 			final String format = (String) args.get(0);
 			final Integer quality = (Integer) args.get(1);
 			final String fileName = (String)args.get(2);
+			final Object crop = (Object)args.get(3);
 
 			super.cordova.getActivity().runOnUiThread(new Runnable() {
 				@Override
@@ -92,7 +93,8 @@ public class Screenshot extends CordovaPlugin {
 					try {
 						if(format.equals("png") || format.equals("jpg")){
 							Bitmap bitmap = getBitmap();
-							File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
+							Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,crop.top,crop.left,crop.width, crop.height);
+							File folder = new File(Environment.getCacheDir(), "Pictures");
 							if (!folder.exists()) {
 								folder.mkdirs();
 							}
@@ -101,10 +103,10 @@ public class Screenshot extends CordovaPlugin {
 
 							FileOutputStream fos = new FileOutputStream(f);
 							if(format.equals("png")){
-								bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+								resizedbitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
 							}
 							if(format.equals("jpg")){
-								bitmap.compress(Bitmap.CompressFormat.JPEG, quality == null?100:quality, fos);
+								resizedbitmap.compress(Bitmap.CompressFormat.JPEG, quality == null?100:quality, fos);
 							}
 							JSONObject jsonRes = new JSONObject();
 							jsonRes.put("filePath",f.getAbsolutePath());
