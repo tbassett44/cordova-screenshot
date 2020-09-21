@@ -110,11 +110,12 @@ public class Screenshot extends CordovaPlugin {
 			if(width>bitmap.getWidth()) width=bitmap.getWidth();
 			if(height>bitmap.getHeight()) height=bitmap.getHeight();
         	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,(int) left,(int) top, (int) width,(int) height);//resize
-        	if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-            	File folder = new File(Environment.getExternalFilesDir(null), "Pictures");
-            }else{
-            	File folder = new File(Environment.getFilesDir(), "Pictures");
-            }
+        	File folder = new File(this.cordova.getActivity().getCacheDir(), "Pictures");
+        	// if (Environment.MEDIA_MOUNTED.equals(this.cordova.getExternalStorageState())) {
+         //    	File folder = new File(this.cordova.getActivity().getCacheDir(), "Pictures");
+         //    }else{
+         //    	File folder = new File(this.cordova.getFilesDir(), "Pictures");
+         //    }
             if (!folder.exists()) {
                 folder.mkdirs();
             }
