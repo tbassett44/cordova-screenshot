@@ -79,8 +79,8 @@ public class Screenshot extends CordovaPlugin {
 	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 	 	// starting on ICS, some WebView methods
 		// can only be called on UI threads
-		// DisplayMetrics dm = this.cordova.getActivity().getResources().getDisplayMetrics(); 
-		// int densityDpi = dm.densityDpi;
+		DisplayMetrics dm = this.cordova.getActivity().getResources().getDisplayMetrics(); 
+		final Integer densityDpi = dm.densityDpi;
 		if (action.equals("saveScreenshot")) {
 			final String format = (String) args.get(0);
 			final Integer quality = (Integer) args.get(1);
@@ -94,8 +94,12 @@ public class Screenshot extends CordovaPlugin {
 					try {
 						if(format.equals("png") || format.equals("jpg")){
 							Bitmap bitmap = getBitmap();
+							final Integer top = (Integer) (crop.getInt("top") * densityDpi);
+							final Integer left = (Integer) (crop.getInt("left") * densityDpi);
+							final Integer width = (Integer) (crop.getInt("width") * densityDpi);
+							final Integer height = (Integer) (crop.getInt("height") * densityDpi);
 							// Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,crop.getInt("top"),crop.getInt("left"),crop.getInt("width"), crop.getInt("height"));
-							Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,Integer (0 * 3),Integer (80 * 3),Integer (824 * 3),Integer (402 * 3));
+							Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,left,top,width,height);
 							File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
 							if (!folder.exists()) {
 								folder.mkdirs();
