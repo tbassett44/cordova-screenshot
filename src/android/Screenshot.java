@@ -103,8 +103,8 @@ public class Screenshot extends CordovaPlugin {
 			int height=crop.getInt("height") * densityDpi;
 			int top=crop.getInt("top") * densityDpi;
 			int left=crop.getInt("left") * densityDpi;
-			Log.d(TAG, "Bitmap Size ("+bitmap.getWidth()+"x"+bitmap.getHeight()+")");
-			Log.d(TAG, "Bounds (top:"+top+" left:"+left+" width:"+width+" height:"+height+")");
+			Log.d("SCREENSHOT", "Bitmap Size ("+bitmap.getWidth()+"x"+bitmap.getHeight()+")");
+			Log.d("SCREENSHOT", "Bounds (top:"+top+" left:"+left+" width:"+width+" height:"+height+")");
 			if(bitmap.getWidth()<width) width=bitmap.getWidth();
 			if(bitmap.getHeight()<height) height=bitmap.getHeight();
         	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,left,top,width,height);//resize
