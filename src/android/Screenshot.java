@@ -80,7 +80,7 @@ public class Screenshot extends CordovaPlugin {
 	 	// starting on ICS, some WebView methods
 		// can only be called on UI threads
 		DisplayMetrics dm = context.getResources().getDisplayMetrics(); 
-		int densityDpi = dm.densityDpi
+		int densityDpi = dm.densityDpi;
 		if (action.equals("saveScreenshot")) {
 			final String format = (String) args.get(0);
 			final Integer quality = (Integer) args.get(1);
