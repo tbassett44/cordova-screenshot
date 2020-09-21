@@ -97,9 +97,7 @@ public class Screenshot extends CordovaPlugin {
 
     private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality, JSONObject crop) {
         try {
-        	DisplayMetrics dm = this.cordova.getActivity().getResources().getDisplayMetrics(); 
-			int densityDpi = dm.densityDpi;
-			float dpr=bitmap.getWidth()/densityDpi;
+			float dpr=bitmap.getWidth()/crop.getInt("actual_width");
 			int width=crop.getInt("width") * dpr;
 			int height=crop.getInt("height") * dpr;
 			int top=crop.getInt("top") * dpr;

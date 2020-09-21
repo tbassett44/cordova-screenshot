@@ -17,6 +17,7 @@ module.exports = {
 	            height:document.body.clientHeight
             }
         }
+        crop.actual_width=document.body.clientWidth;//used for DPR calc in android
 		format = (format || 'png').toLowerCase();
 		filename = filename || 'screenshot_'+Math.round((+(new Date()) + Math.random()));
 		if(formats.indexOf(format) === -1){
