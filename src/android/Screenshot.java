@@ -98,15 +98,17 @@ public class Screenshot extends CordovaPlugin {
     private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality, JSONObject crop) {
         try {
 			float dpr=(float) bitmap.getWidth()/(float) crop.getInt("actual_width");
-			float width=(float) crop.getInt("width") * dpr;
-			float height=(float) crop.getInt("height") * dpr;
-			float top=(float) crop.getInt("top") * dpr;
-			float left=(float) crop.getInt("left") * dpr;
+			float width=Math.ceil((float) crop.getInt("width") * dpr);
+			float height=Math.ceil((float) crop.getInt("height") * dpr);
+			float top=Math.ceil((float) crop.getInt("top") * dpr);
+			float left=Math.ceil((float) crop.getInt("left") * dpr);
 			Log.d("SCREENSHOT", "Bitmap Size ("+bitmap.getWidth()+"x"+bitmap.getHeight()+")");
 			Log.d("SCREENSHOT", "Bounds (top:"+top+" left:"+left+" width:"+width+" height:"+height+")");
 			Log.d("SCREENSHOT", "Actual Width:"+crop.getInt("actual_width")+ " Actual Height:"+crop.getInt("actual_height"));
 			Log.d("SCREENSHOT", "Original Width:"+crop.getInt("width"));
 			Log.d("SCREENSHOT", "DPR: "+dpr);
+			if(width>bitmap.getWidth()) width=bitmap.getWidth();
+			if(height>bitmap.getHeight()) height=bitmap.getHeight();
         	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,(int) left,(int) top, (int) width,(int) height);//resize
             File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
             if (!folder.exists()) {
