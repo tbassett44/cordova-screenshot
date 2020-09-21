@@ -104,7 +104,7 @@ public class Screenshot extends CordovaPlugin {
 			float left=crop.getInt("left") * dpr;
 			Log.d("SCREENSHOT", "Bitmap Size ("+bitmap.getWidth()+"x"+bitmap.getHeight()+")");
 			Log.d("SCREENSHOT", "Bounds (top:"+top+" left:"+left+" width:"+width+" height:"+height+")");
-			Log.d("SCREENSHOT", "Actual Width:"+crop.getInt("actual_width"));
+			Log.d("SCREENSHOT", "Actual Width:"+crop.getInt("actual_width")+ ' Actual Height:'+crop.getInt("actual_height"));
 			Log.d("SCREENSHOT", "Original Width:"+crop.getInt("width"));
 			Log.d("SCREENSHOT", "DPR: "+dpr);
         	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,(int) left,(int) top, (int) width,(int) height);//resize
