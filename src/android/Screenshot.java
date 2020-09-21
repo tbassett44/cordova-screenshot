@@ -98,10 +98,10 @@ public class Screenshot extends CordovaPlugin {
     private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality, JSONObject crop) {
         try {
 			float dpr=(float) bitmap.getWidth()/(float) crop.getInt("actual_width");
-			float width=Math.ceil((float) crop.getInt("width") * dpr);
-			float height=Math.ceil((float) crop.getInt("height") * dpr);
-			float top=Math.ceil((float) crop.getInt("top") * dpr);
-			float left=Math.ceil((float) crop.getInt("left") * dpr);
+			float width=(float) Math.ceil((float) crop.getInt("width") * dpr);
+			float height=(float) Math.ceil((float) crop.getInt("height") * dpr);
+			float top=(float) Math.ceil((float) crop.getInt("top") * dpr);
+			float left=(float) Math.ceil((float) crop.getInt("left") * dpr);
 			Log.d("SCREENSHOT", "Bitmap Size ("+bitmap.getWidth()+"x"+bitmap.getHeight()+")");
 			Log.d("SCREENSHOT", "Bounds (top:"+top+" left:"+left+" width:"+width+" height:"+height+")");
 			Log.d("SCREENSHOT", "Actual Width:"+crop.getInt("actual_width")+ " Actual Height:"+crop.getInt("actual_height"));
