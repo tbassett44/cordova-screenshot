@@ -94,7 +94,7 @@ public class Screenshot extends CordovaPlugin {
 
     private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality) {
         try {
-        	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,0,240,2472,1206);//resize
+        	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,100,100,200,200);//resize
             File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
             if (!folder.exists()) {
                 folder.mkdirs();
