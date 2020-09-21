@@ -97,14 +97,14 @@ public class Screenshot extends CordovaPlugin {
 
     private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality, JSONObject crop) {
         try {
-			float dpr=bitmap.getWidth()/crop.getFloat("actual_width");
-			float width=crop.getFloat("width") * dpr;
-			float height=crop.getFloat("height") * dpr;
-			float top=crop.getFloat("top") * dpr;
-			float left=crop.getFloat("left") * dpr;
+			float dpr=bitmap.getWidth()/crop.getInt("actual_width");
+			float width=crop.getInt("width") * dpr;
+			float height=crop.getInt("height") * dpr;
+			float top=crop.getInt("top") * dpr;
+			float left=crop.getInt("left") * dpr;
 			Log.d("SCREENSHOT", "Bitmap Size ("+bitmap.getWidth()+"x"+bitmap.getHeight()+")");
 			Log.d("SCREENSHOT", "Bounds (top:"+top+" left:"+left+" width:"+width+" height:"+height+")");
-			Log.d("SCREENSHOT", "Original Width:"+crop.getFloat("width"));
+			Log.d("SCREENSHOT", "Original Width:"+crop.getInt("width"));
 			Log.d("SCREENSHOT", "DPR: "+dpr);
         	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,(int) left,(int) top, (int) width,(int) height);//resize
             File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
