@@ -162,7 +162,7 @@ public class Screenshot extends CordovaPlugin {
         mFormat = (String) mArgs.get(0);
         mQuality = (Integer) mArgs.get(1);
         mFileName = (String) mArgs.get(2);
-        mCrop = (String) mArgs.get(3);
+        mCrop = (JSONObject) mArgs.get(3);
 
         super.cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
