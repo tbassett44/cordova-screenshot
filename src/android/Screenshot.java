@@ -31,6 +31,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import android.util.DisplayMetrics;
 
 
 public class Screenshot extends CordovaPlugin {
@@ -41,6 +42,7 @@ public class Screenshot extends CordovaPlugin {
 
     private String mFormat;
     private String mFileName;
+    private JSONObject mCrop;
     private Integer mQuality;
 
     protected final static String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -92,9 +94,11 @@ public class Screenshot extends CordovaPlugin {
         this.cordova.getActivity().sendBroadcast(mediaScanIntent);
     }
 
-    private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality) {
+    private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality, JSONObject crop) {
         try {
-        	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,100,100,200,200);//resize
+   //      	DisplayMetrics dm = this.cordova.getActivity().getResources().getDisplayMetrics(); 
+			// densityDpi = dm.densityDpi;
+        	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,crop.getInt('left'),crop.getInt('top'),crop.getInt('width'),crop.getInt('height'));//resize
             File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
             if (!folder.exists()) {
                 folder.mkdirs();
@@ -158,6 +162,7 @@ public class Screenshot extends CordovaPlugin {
         mFormat = (String) mArgs.get(0);
         mQuality = (Integer) mArgs.get(1);
         mFileName = (String) mArgs.get(2);
+        mCrop = (String) mArgs.get(3);
 
         super.cordova.getActivity().runOnUiThread(new Runnable() {
             @Override
@@ -165,7 +170,7 @@ public class Screenshot extends CordovaPlugin {
                 if (mFormat.equals("png") || mFormat.equals("jpg")) {
                     Bitmap bitmap = getBitmap();
                     if (bitmap != null) {
-                        saveScreenshot(bitmap, mFormat, mFileName, mQuality);
+                        saveScreenshot(bitmap, mFormat, mFileName, mQuality,mCrop);
                     }
                 } else {
                     mCallbackContext.error("format " + mFormat + " not found");
