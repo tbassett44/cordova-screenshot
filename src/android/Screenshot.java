@@ -102,9 +102,9 @@ public class Screenshot extends CordovaPlugin {
 			int height=crop.getInt("height") * densityDpi;
 			int top=crop.getInt("top") * densityDpi;
 			int left=crop.getInt("left") * densityDpi;
-			if(bitmap.width()<width) width=bitmap.width();
-			if(bitmap.height()<height) height=bitmap.height();
-        	Bitmap resizedbitmap=Bitmap.createBitmap(left,top,width,height);//resize
+			if(bitmap.getWidth()<width) width=bitmap.getWidth();
+			if(bitmap.getHeight()<height) height=bitmap.getHeight();
+        	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,left,top,width,height);//resize
             File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
             if (!folder.exists()) {
                 folder.mkdirs();
