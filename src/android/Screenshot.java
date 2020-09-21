@@ -79,7 +79,7 @@ public class Screenshot extends CordovaPlugin {
 	public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 	 	// starting on ICS, some WebView methods
 		// can only be called on UI threads
-		DisplayMetrics dm = this.cordova.getActivity().getApplicationContext().getResources().getDisplayMetrics(); 
+		DisplayMetrics dm = this.cordova.getActivity().getResources().getDisplayMetrics(); 
 		int densityDpi = dm.densityDpi;
 		if (action.equals("saveScreenshot")) {
 			final String format = (String) args.get(0);
