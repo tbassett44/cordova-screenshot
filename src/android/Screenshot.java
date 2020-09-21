@@ -55,7 +55,7 @@ public class Screenshot extends CordovaPlugin {
             Bitmap bitmap = (Bitmap) data;
             if (bitmap != null) {
                 if (mAction.equals("saveScreenshot")) {
-                    saveScreenshot(bitmap, mFormat, mFileName, mQuality);
+                    saveScreenshot(bitmap, mFormat, mFileName, mQuality,mCrop);
                 } else if (mAction.equals("getScreenshotAsURI")) {
                     getScreenshotAsURI(bitmap, mQuality);
                 }
