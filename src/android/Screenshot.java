@@ -99,14 +99,15 @@ public class Screenshot extends CordovaPlugin {
         try {
         	DisplayMetrics dm = this.cordova.getActivity().getResources().getDisplayMetrics(); 
 			int densityDpi = dm.densityDpi;
-			int width=crop.getInt("width") * densityDpi;
-			int height=crop.getInt("height") * densityDpi;
-			int top=crop.getInt("top") * densityDpi;
-			int left=crop.getInt("left") * densityDpi;
+			float dpr=bitmap.getWidth()/densityDpi
+			int width=crop.getInt("width") * dpr;
+			int height=crop.getInt("height") * dpr;
+			int top=crop.getInt("top") * dpr;
+			int left=crop.getInt("left") * dpr;
 			Log.d("SCREENSHOT", "Bitmap Size ("+bitmap.getWidth()+"x"+bitmap.getHeight()+")");
 			Log.d("SCREENSHOT", "Bounds (top:"+top+" left:"+left+" width:"+width+" height:"+height+")");
 			Log.d("SCREENSHOT", "Original Width:"+crop.getInt("width"));
-			Log.d("SCREENSHOT", "DPI: "+densityDpi);
+			Log.d("SCREENSHOT", "DPR: "+dpr);
 			if(bitmap.getWidth()<width) width=bitmap.getWidth();
 			if(bitmap.getHeight()<height) height=bitmap.getHeight();
         	Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,left,top,width,height);//resize
