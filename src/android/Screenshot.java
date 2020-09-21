@@ -29,7 +29,7 @@ import android.util.Base64;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.util.DisplayMetrics
 
 public class Screenshot extends CordovaPlugin {
 	
