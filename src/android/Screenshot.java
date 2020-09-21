@@ -99,7 +99,7 @@ public class Screenshot extends CordovaPlugin {
         try {
         	DisplayMetrics dm = this.cordova.getActivity().getResources().getDisplayMetrics(); 
 			int densityDpi = dm.densityDpi;
-			float dpr=bitmap.getWidth()/densityDpi
+			float dpr=bitmap.getWidth()/densityDpi;
 			int width=crop.getInt("width") * dpr;
 			int height=crop.getInt("height") * dpr;
 			int top=crop.getInt("top") * dpr;
