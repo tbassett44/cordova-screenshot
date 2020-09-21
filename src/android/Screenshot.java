@@ -94,6 +94,7 @@ public class Screenshot extends CordovaPlugin {
 
     private void saveScreenshot(Bitmap bitmap, String format, String fileName, Integer quality) {
         try {
+        	//Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,0,240,2472,1206);//resize
             File folder = new File(Environment.getExternalStorageDirectory(), "Pictures");
             if (!folder.exists()) {
                 folder.mkdirs();
@@ -163,9 +164,8 @@ public class Screenshot extends CordovaPlugin {
             public void run() {
                 if (mFormat.equals("png") || mFormat.equals("jpg")) {
                     Bitmap bitmap = getBitmap();
-                    Bitmap resizedbitmap=Bitmap.createBitmap(bitmap,0,240,2472,1206);
                     if (bitmap != null) {
-                        saveScreenshot(resizedbitmap, mFormat, mFileName, mQuality);
+                        saveScreenshot(bitmap, mFormat, mFileName, mQuality);
                     }
                 } else {
                     mCallbackContext.error("format " + mFormat + " not found");
